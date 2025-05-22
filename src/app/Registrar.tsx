@@ -1,8 +1,9 @@
 import { View, TextInput, StyleSheet, Button, Alert, Image, Text, TouchableOpacity} from 'react-native'
-import { Campo } from '@/components/Campos'
+import { DropSelect } from '@/components/DropSelect'
 import { useState } from 'react'
 import { useClienteDataBase, ClienteDataBase } from '@/database/useClienteDataBase'
 import { useNavigation } from 'expo-router'
+
 
 export default function Registrar(){
     const [id, setId] = useState("")
@@ -43,10 +44,23 @@ export default function Registrar(){
             <Text style={styles.tituloReg}>  Registrar Resíduo</Text>
             <Text style={styles.nomeInput}>Data</Text>
             <View style={styles.inputs}>
-            <TextInput style={styles.inputStyle} />
-            </View>             
-          
-            <TouchableOpacity style={styles.botaoGeral} onPress={() => navigation.navigate('Consultar')}><Text style={styles.botaoVer}>Ver Todos</Text></TouchableOpacity>
+            <TextInput style={styles.inputStyle} placeholder="Ex: 00/00/0000" onChangeText={setDataResiduo} value={dataResiduo}/>
+            </View>
+            <Text style={styles.nomeInput}>Categoria</Text>
+            <View style={styles.inputs}>
+                <View style={styles.viewStyles}>
+            <DropSelect onChangeValue={setCategoria} value={categoria}  ></DropSelect>
+            </View>
+            </View>
+            <Text style={styles.nomeInput}>Peso</Text>
+            <View style={styles.inputs}>
+            <TextInput style={styles.inputStyle} placeholder="Ex: 2kg" onChangeText={setPeso} value={peso}/>
+            </View>
+                         
+            <View style={styles.botoes}>
+            <TouchableOpacity style={styles.botaoGeral} onPress={create}><Text style={styles.botaoVer}>Registrar</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.botaoGeralVoltar} onPress={() => navigation.navigate('Index')}><Text style={styles.botaoVerVoltar}>Voltar</Text></TouchableOpacity>
+          </View>
           </View>
            
         </View>
@@ -66,6 +80,11 @@ const styles = StyleSheet.create({
             display:"flex",
             alignItems:"center"
           
+
+        },
+        viewStyles: {
+            display:"flex",
+            justifyContent:"center",
 
         },
        
@@ -92,45 +111,67 @@ const styles = StyleSheet.create({
             paddingTop:25,
             paddingBottom:5,
             fontSize:38,
-            paddingRight: 10,
+   
             fontWeight:"bold",
             color:"white",
         },
+        botoes: {
+            alignItems:"center",
+            display:"flex",
+            justifyContent:"center",
+        },
         botaoVer: {
-            fontSize:14,
+            fontSize:21,
             color:"white",
             fontWeight:"800",
                         
         },
         botaoGeral: {
-            width:100,
-            height:35,
+            width:210,
+            height:47,
             backgroundColor:"#4F9231",
             borderRadius:10,
             alignItems:"center",
             display:"flex",
             justifyContent:"center",
-            marginTop:20
+            marginTop:20,
+        },
+        botaoVerVoltar: {
+            fontSize:21,
+            color:"#4F9231",
+            fontWeight:"800",
+                        
+        },
+        botaoGeralVoltar: {
+            width:210,
+            height:47,
+            backgroundColor:"white",
+            borderRadius:10,
+            alignItems:"center",
+            display:"flex",
+            justifyContent:"center",
+            marginTop:20,
         },
         nomeInput: {
             fontSize:25,
             color:"white",
             fontWeight:"700",
             textAlign:"left",
-            paddingLeft: 20,
+            paddingLeft: 30,
             paddingTop:20,
 
         },
         inputStyle: {
             backgroundColor:"white",
             width:"85%",
-            borderRadius:10
+            borderRadius:10,
+            height:50
         },
         inputs: {
             display:"flex",
             justifyContent:"center",
             alignItems:"center",
-            marginTop:8 
+            marginTop:4 
 
         }
         
