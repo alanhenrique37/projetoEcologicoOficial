@@ -1,19 +1,20 @@
-import { View, TextInput, StyleSheet, Button, Alert, FlatList} from 'react-native'
+import { View, StyleSheet, Button, FlatList, Image, Text, TouchableOpacity } from 'react-native'
 import { Campo } from '@/components/Campos'
 import { useState, useEffect } from 'react'
 import { useClienteDataBase, ClienteDataBase } from '@/database/useClienteDataBase'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRoute } from '@react-navigation/native'
 import { Cliente } from '@/components/Cliente'
 
 export default function Index(){
-    const [id, setId] = useState("")
-    const [dataResiduo, setDataResiduo] = useState("")
-    const [categoria, setCategoria] = useState("")
-    const [peso, setPeso] = useState("")
-    const [busca, setBusca] = useState("")
+    const navigation = useNavigation()
+    const route = useRoute()
+
+    // Pega o parâmetro categoriaSelecionada do route params
+    const categoriaSelecionada = route.params?.categoriaSelecionada || ""
+
+    const [busca, setBusca] = useState(categoriaSelecionada)
     const [cliente, setCliente] = useState<ClienteDataBase[]>()
     const clienteDataBase = useClienteDataBase()
-    const navigation = useNavigation()
 
     async function list(){
         try{
@@ -22,14 +23,7 @@ export default function Index(){
         }catch(error){
             console.log(error)
         }
-    }//fim do listar
-
-    async function details(item:ClienteDataBase){
-        setId(String(item.id))
-        setDataResiduo(item.dataResiduo)
-        setCategoria(item.categoria)
-        setPeso(item.peso)
-    }//detalha a estrutura de consulta
+    }
 
     async function remove(id:number){
         try{
@@ -38,44 +32,116 @@ export default function Index(){
         }catch(error){
             console.log(error)
         }
-    }//fim da função remover
+    }
 
-    //Para carregar a lista do banco...
-    useEffect(() => {list()}, [busca])
+    useEffect(() => {
+        list()
+    }, [busca])
+
+    useEffect(() => {
+        setBusca(categoriaSelecionada)
+    }, [categoriaSelecionada])
 
     return (
         <View style={styles.container}>
-            <Campo placeholder="Pesquisar" onChangeText={setBusca}/>
+            <View style={styles.logos}>
+                    <Image
+                    style={{width: 100, height: 100}}
+                    source={require('../../assets/images/logo.png')}
+                    />
+          
+            </View>
+            <View>
+                 <Text style={styles.titulo}>Gestão de Resíduos</Text>
+            </View>
+            <Campo
+            style={styles.campoStyle}
+            placeholder="Pesquisar"
+            onChangeText={setBusca}
+            value={busca}
+            maxLength={20}
+            />
 
             <View style={styles.flat}>
-                <FlatList 
+                <FlatList style={styles.flatStyle}
                     data={cliente}
                     keyExtractor={(item) => String(item.id)}
-                    renderItem={({item}) => <Cliente data={item} onDelete={() => remove(item.id)} onEditar={() => navigation.navigate('Atualizar', {item}) }/>}
+                    renderItem={({item}) => (
+                      <Cliente 
+                        data={item} 
+                        onDelete={() => remove(item.id)} 
+                        onEditar={() => navigation.navigate('Atualizar', {item}) }
+                      />
+                    )}
                     contentContainerStyle={{gap:16}}
                 />
             </View>
+            <TouchableOpacity style={styles.botaoGeralVoltar} onPress={() => navigation.navigate('Index')}><Text style={styles.botaoVerVoltar}>Voltar</Text></TouchableOpacity>
 
-
-            <Button title="Voltar" onPress={() => navigation.navigate('Index')}/>
+           
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-        container:{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            backgroundColor: '#898989',
-            alignItems: "center",
-            marginTop: 25,
-        },
-        flat:{
-            width: "100%",
-            height: "50%",
-            padding: 10,
-            backgroundColor: "#fff",
-        },
-    }   
-);
+    container:{
+        width: '100%',
+        height: '100%',
+   
+        backgroundColor: '#6BB848  linear-gradient(90deg,rgba(107, 184, 72, 0.38) 100%, rgba(107, 184, 72, 0) 0%)',
+        alignItems: "center",
+        marginTop: 25,
+    },
+    flat:{
+        width: "100%",
+        height: "50%",
+        padding: 10,
+                
+   
+    },
+    botaoVerVoltar: {
+        fontSize:21,
+        color:"#4F9231",
+        fontWeight:"800",                    
+    },
+    botaoGeralVoltar: {
+        width:210,
+        height:47,
+        backgroundColor:"white",
+        borderRadius:10,
+        alignItems:"center",
+        display:"flex",
+        justifyContent:"center",
+        marginTop:20,
+    },
+ 
+    contentContainerStyle: {
+        backgroundColor:"#6BB848",
+        margin:100
+    },
+    flatStyle: {
+        width:"110%",
+        
+    },
+    logos: {
+        marginTop: 40,
+        alignItems:"center"
+    },
+    titulo: {
+        textAlign:"center",
+        fontSize:30,
+        fontWeight: "bold",
+        color: "#6BB848",
+    },
+    campoStyle: {
+        width:300,
+        height:50,
+        backgroundColor:"white",
+        borderRadius:15,
+        padding:10,
+        marginTop:20,
+        marginBottom:20,
+
+        fontSize:16,
+    }
+})

@@ -44,7 +44,32 @@ export default function Registrar(){
             <Text style={styles.tituloReg}>  Registrar Resíduo</Text>
             <Text style={styles.nomeInput}>Data</Text>
             <View style={styles.inputs}>
-            <TextInput style={styles.inputStyle} placeholder="Ex: 00/00/0000" onChangeText={setDataResiduo} value={dataResiduo}/>
+            <TextInput
+                style={styles.inputStyle}
+                placeholder="Ex: 00/00/0000"
+                value={dataResiduo}
+                keyboardType="numeric"
+                maxLength={10}
+                onChangeText={(text) => {
+                    // Remove tudo que não for número
+                    const onlyNumbers = text.replace(/\D/g, '');
+
+                    // Formata automaticamente para dd/mm/aaaa
+                    let formatted = onlyNumbers;
+                    if (onlyNumbers.length > 2 && onlyNumbers.length <= 4) {
+                    formatted = onlyNumbers.slice(0, 2) + '/' + onlyNumbers.slice(2);
+                    } else if (onlyNumbers.length > 4) {
+                    formatted =
+                        onlyNumbers.slice(0, 2) +
+                        '/' +
+                        onlyNumbers.slice(2, 4) +
+                        '/' +
+                        onlyNumbers.slice(4, 8);
+                    }
+
+                    setDataResiduo(formatted);
+                }}
+            />
             </View>
             <Text style={styles.nomeInput}>Categoria</Text>
             <View style={styles.inputs}>

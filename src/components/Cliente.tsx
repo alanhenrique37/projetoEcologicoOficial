@@ -17,17 +17,18 @@ export function Cliente({ data, onDelete, onEditar, ...rest}:Props){
     return (
         <View style={styles.container}>
             <Pressable style={styles.fundo} {...rest}>
-                <Text >
+                <Text style={styles.textt}>
                     {data.id} - {data.dataResiduo} - {data.categoria} - {data.peso}
                 </Text>
-
+            <View style={styles.rowIcons}>
                 <TouchableOpacity onPress={onEditar}>
-                    <MaterialIcons name="edit" size={24} color="#3232aa"/>
+                    <MaterialIcons name="edit" size={28} color="#ccc"/>
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={onDelete}>
-                    <MaterialIcons name="delete" size={24} color="red"/>
+                    <MaterialIcons name="delete" size={28} color="#ccc"/>
                 </TouchableOpacity>
+            </View>
             </Pressable>
         </View>
         
@@ -41,13 +42,23 @@ const styles = StyleSheet.create({
         marginLeft: 20,
         marginRight: 50,
     },
+    rowIcons: {
+        display:"flex",
+        flexDirection:"row",
+    },
 
     fundo:{
         width: "80%",
-        backgroundColor: "#CECECE",
+        backgroundColor: "#4F9231",
         padding: 24,
-        borderRadius: 5,
+        borderRadius: 15,
         gap: 12,
-        flexDirection: "row",
+        flexDirection: "column",
+        
     },
+    textt: {
+        color:"white",
+        fontSize:17,
+        fontWeight:"bold"    
+    }
 });

@@ -33,10 +33,10 @@ export function useClienteDataBase(){
         }
     }//fim do create
 
-    async function consultar(dataResiduo:string){
+    async function consultar(categoria:string){
         try{
-            const query = "select * from dados where dataResiduo like ?"//Interrogação: Substituir por qualquer item de busca
-            const response = await dataBase.getAllAsync<ClienteDataBase>(query,`%${dataResiduo}%`)
+            const query = "select * from dados where categoria like ?"//Interrogação: Substituir por qualquer item de busca
+            const response = await dataBase.getAllAsync<ClienteDataBase>(query,`%${categoria}%`)
             return response
         }catch(error){
             throw error
